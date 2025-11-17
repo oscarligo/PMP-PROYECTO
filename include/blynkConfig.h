@@ -4,19 +4,17 @@
 // ===============================
 // Blynk Template Definitions
 // ===============================
-// Reemplaza estos valores con los de tu Template en Blynk (Web Dashboard > Template > Info)
-// IMPORTANTE: Sin estos defines el build falla.
 
 #ifndef BLYNK_TEMPLATE_ID
-#define BLYNK_TEMPLATE_ID "TEMPLATE_ID_HERE"  
+#define BLYNK_TEMPLATE_ID "TMPL25MttqSax"  
 #endif
 
 #ifndef BLYNK_TEMPLATE_NAME
-#define BLYNK_TEMPLATE_NAME "TEMPLATE_NAME_HERE" 
+#define BLYNK_TEMPLATE_NAME "Proyecto Final" 
 #endif
 
 #ifndef BLYNK_AUTH_TOKEN
-#define BLYNK_AUTH_TOKEN "BLYNK_AUTH_TOKEN_HERE"
+#define BLYNK_AUTH_TOKEN "8dwT1yIdAJhRUpQwMSKCwtmq57mkIMLW"
 #endif
 
 

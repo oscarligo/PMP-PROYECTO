@@ -11,12 +11,12 @@
 #include "googleSheets.h"
 
 // Configuración WiFi y Blynk
-char ssid[] = "SSID_NAME";
-char password[] = "PASSWORD_HERE";
+char ssid[] = "Nandez";
+char password[] = "pendejo8";
 // Auth Token ahora se obtiene de define BLYNK_AUTH_TOKEN (ver blynkConfig.h)
 
 // URL de Google Apps Script (reemplazar con tu deployment URL)
-const char* googleScriptUrl = "SCRIPT_URL_HERE";
+const char* googleScriptUrl = "https://script.google.com/macros/s/AKfycbzBkxII56YZ73sTPBUxR9V55go09jxexB0K1m7-C9POzfuSrTZwB60CDYr6wjia8MJN/exec";
 
 // Variables para control de temperatura
 
@@ -33,7 +33,7 @@ unsigned long lastReadTime = 0; // Última vez que se leyeron los sensores
 const unsigned long READ_INTERVAL = 1000;  // Leer cada 1 segundo
 
 unsigned long lastGoogleSheetsTime = 0; // Última vez que se envió a Google Sheets
-const unsigned long GOOGLE_SHEETS_INTERVAL = 2000;  // Enviar cada 2 segundos (evitar límites de cuota)
+const unsigned long GOOGLE_SHEETS_INTERVAL = 60000;  // Enviar cada 60 segundos (evitar límites de cuota)
 
 void setup() {
   Serial.begin(115200);

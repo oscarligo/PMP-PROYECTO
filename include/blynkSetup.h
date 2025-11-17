@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-// Virtual pins mapping (configure in Blynk app dashboard)
+// Pines Virtuales
 // V0: Temperature (float)
 // V1: Pressure (float)
 // V2: Altitude (float)
@@ -14,16 +14,18 @@
 
 void setupBlynk(const char* authToken);
 void blynkRun();
-// Force (re)connection attempt if disconnected (non-blocking style)
+
+// Si no está conectado, forzar intento de reconexión.
 void blynkEnsureConnected();
-// Return true if currently connected to Blynk cloud
+
+// Retorna true si está conectado actualmente al cloud de Blynk
 bool blynkIsConnected();
 
-// Publish current values to Blynk
+// Publicar valores actuales a Blynk
 void blynkPublish(float temperature, float pressure, float altitude,
                     float distance, bool flameDetected, bool ledIsRed);
-
-// Query remote buzzer request (from Blynk button V6)
+                    
+// Consultar solicitud remota de buzzer (desde botón Blynk V6)
 bool isBlynkBuzzerRequested();
 
 #endif // BLYNK_SETUP_H

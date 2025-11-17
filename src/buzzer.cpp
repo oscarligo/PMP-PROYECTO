@@ -7,14 +7,6 @@
 // Frecuencia para el buzzer PASIVO 
 const unsigned int BUZZER_FREQ = 2000; // Hz
 
-/*
- * TIPOS DE BUZZER:
- * - Activo: suena sólo con aplicar HIGH (ya trae oscilador interno). Mantener HIGH = sonido constante.
- * - Pasivo: requiere señal PWM (tone) para generar sonido. HIGH fijo sólo produce un "click" inicial.
- *
- * Este código usa tone() para soportar buzzers pasivos y también funciona con activos.
- */
-
 void setupBuzzer() {
     pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW); // Estado inicial silencioso
