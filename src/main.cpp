@@ -6,12 +6,17 @@
 #include "ledRGB.h"
 #include "buzzer.h"
 #include "button.h"  
+#include "blynkSetup.h"
+#include "blynkConfig.h" // Asegura macros BLYNK_TEMPLATE_ID/NAME/AUTH disponibles aquí
+#include "googleSheets.h"
 
-// Configuración WiFi 
+// Configuración WiFi y Blynk
+char ssid[] = "SSID_NAME";
+char password[] = "PASSWORD_HERE";
+// Auth Token ahora se obtiene de define BLYNK_AUTH_TOKEN (ver blynkConfig.h)
 
-char ssid[] = "SSID";
-char password[] = "Password";
-
+// URL de Google Apps Script (reemplazar con tu deployment URL)
+const char* googleScriptUrl = "SCRIPT_URL_HERE";
 
 // Variables para control de temperatura
 
@@ -26,6 +31,9 @@ const float DISTANCE_THRESHOLD = 30.0;  // Distancia en cm para activar alarma
 
 unsigned long lastReadTime = 0; // Última vez que se leyeron los sensores
 const unsigned long READ_INTERVAL = 1000;  // Leer cada 1 segundo
+
+unsigned long lastGoogleSheetsTime = 0; // Última vez que se envió a Google Sheets
+const unsigned long GOOGLE_SHEETS_INTERVAL = 2000;  // Enviar cada 2 segundos (evitar límites de cuota)
 
 void setup() {
   Serial.begin(115200);
@@ -52,7 +60,11 @@ void setup() {
   }
   
   // WiFi setup 
-  // setupWiFi(ssid, password);
+  setupWiFi(ssid, password);
+  // Blynk setup (usa la conexión WiFi existente)
+  setupBlynk(BLYNK_AUTH_TOKEN);
+  // Google Sheets setup
+  setupGoogleSheets(googleScriptUrl);
   
   // Obtener temperatura base después de 2 segundos
   delay(2000);
@@ -66,6 +78,9 @@ void setup() {
 }
 
 void loop() {
+  // Blynk loop
+  blynkRun();
+  blynkEnsureConnected(); // Intentar reconectar si se perdió conexión
   
   // Verificar si es tiempo de leer sensores
   if (millis() - lastReadTime >= READ_INTERVAL) {
@@ -132,21 +147,43 @@ void loop() {
     }
     
     // Control del LED RGB
-    if (tempAlarm || distanceAlarm) {
-      setLEDColor(LED_RED);
-    } else {
-      setLEDColor(LED_GREEN);
-    }
+    bool ledIsRed = (tempAlarm || distanceAlarm);
+    if (ledIsRed) setLEDColor(LED_RED); else setLEDColor(LED_GREEN);
     
-    // Control del Buzzer (solo si hay flama)
-    if (flameDetected) {
+    // Control del Buzzer (flama O petición desde Blynk)
+    if (flameDetected || isBlynkBuzzerRequested()) {
       buzzerOn();
       Serial.println(">>> ¡¡¡FUEGO DETECTADO!!! <<<");
     } else {
       buzzerOff();
     }
+
+    // Publicar a Blynk (debug de estado de conexión)
+    if (!blynkIsConnected()) {
+      Serial.println("[Blynk] Aún sin conexión. Datos locales OK.");
+    }
+    blynkPublish(temperature, pressure, altitude, distance, flameDetected, ledIsRed);
     
     Serial.println("========================================\n");
+  }
+  
+  // Enviar a Google Sheets cada 60 segundos
+  if (millis() - lastGoogleSheetsTime >= GOOGLE_SHEETS_INTERVAL) {
+    lastGoogleSheetsTime = millis();
+    
+    // Leer valores actuales
+    float temp = readTemperature();
+    float pres = readPressure();
+    float alt = readAltitude();
+    float dist = readDistance();
+    bool flame = isFlameDetected();
+    
+    Serial.println("[GoogleSheets] Enviando datos periódicos...");
+    if (sendToGoogleSheets(temp, pres, alt, dist, flame)) {
+      Serial.println("[GoogleSheets] ✓ Datos enviados exitosamente");
+    } else {
+      Serial.println("[GoogleSheets] ✗ Error al enviar datos");
+    }
   }
   
   // Verificar botón (ejemplo de uso - resetear la temperatura base)
