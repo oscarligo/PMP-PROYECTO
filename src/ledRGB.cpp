@@ -5,6 +5,7 @@
 #define LED_GREEN_PIN 0  // D3 (GPIO0) - Nota: GPIO0 debe estar HIGH en boot normal
 
 void setupLED() {
+    
     // Configurar pines como OUTPUT
     pinMode(LED_RED_PIN, OUTPUT);
     pinMode(LED_GREEN_PIN, OUTPUT);

@@ -5,9 +5,9 @@
 
 // Colores del LED
 enum LedColor {
-  LED_GREEN,
-  LED_RED,
-  LED_OFF
+    LED_GREEN,
+    LED_RED,
+    LED_OFF
 };
 
 // Inicializar el LED RGB

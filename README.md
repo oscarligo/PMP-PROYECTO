@@ -1,4 +1,4 @@
-# Sistema de Sensores ESP8266
+# Sistema de Monitorea con ESP8266
 
 Este proyecto implementa un sistema de monitoreo para ESP8266 con arquitectura modular utilizando platformIO.
 
